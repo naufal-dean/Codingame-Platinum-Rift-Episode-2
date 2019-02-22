@@ -72,6 +72,36 @@ while True:
 
 
     # first line for movement commands, second line no longer used (see the protocol in the statement for details)
+    # move value
+    pos_move_val = []
+
+    for i in range(len(pos_move)):
+        pos_move_val.append([])
+        for j in pos_move[i]:
+            for k in range(len(z_vis_1)):
+                if j == z_vis_1[k]:
+                    if z_vis_2[k] == -1:
+                        pos_move_val[i] += [z_vis_6[k] + 2]
+                    elif z_vis_2[k] == 1:
+                        pos_move_val[i] += [z_vis_6[k] + 4]
+                    else:
+                        pos_move_val[i] += [z_vis_6[k]]
+
+        # max value
+        mx = max(pos_move_val[i])
+        #print(mx)
+        # remove non max value move
+        remove_index = []
+
+        for j in range((len(pos_move_val[i]) - 1), -1, -1):
+            if pos_move_val[i][j] < (mx - 1):
+                remove_index += [j]
+        #print(remove_index, pos_move)
+        for item in remove_index:
+            #print(i)
+            del pos_move[i][item]
+        #print(pos_move)
+    # move
     move = []
 
     for i in range(len(z_pod_1)):

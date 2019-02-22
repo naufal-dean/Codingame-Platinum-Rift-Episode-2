@@ -10,28 +10,29 @@ from random import randint
 # zone_count: the amount of zones on the map
 # link_count: the amount of links between all zones
 player_count, my_id, zone_count, link_count = [int(i) for i in input().split()]
-
-z_list, l_list = [], []
+l_zone_id, l_platinum_source = [], []
+l_zone_1, l_zone_2 = [], []
 
 for i in range(zone_count):
     # zone_id: this zone's ID (between 0 and zoneCount-1)
     # platinum_source: Because of the fog, will always be 0
     zone_id, platinum_source = [int(j) for j in input().split()]
-    z_list += [[zone_id, platinum_source]]
+    l_zone_id += [zone_id]
+    l_platinum_source += [platinum_source]
 
 for i in range(link_count):
     zone_1, zone_2 = [int(j) for j in input().split()]
-    l_list += [[zone_1, zone_2]]
+    l_zone_1 += [zone_1]
+    l_zone_2 += [zone_2]
 
 # game loop
 while True:
     my_platinum = int(input())  # your available Platinum
 
-    z_vis = []          # list zona visible
-    z_pod = []          # list zona dengan pod (indeks 0 sd i)
-    pos_move = []       # list possible move untuk tiap pod ke-i
-    count = 0           # indeks pada pos_move, variabel dummy
-    move = []           # list print
+    z_vis_1, z_vis_2, z_vis_3, z_vis_4, z_vis_5, z_vis_6 = [], [], [], [], [], []
+    z_pod_1, z_pod_2, z_pod_3, z_pod_4, z_pod_5, z_pod_6 = [], [], [], [], [], []
+    pos_move = []
+    count = 0
 
     for i in range(zone_count):
         # z_id: this zone's ID
@@ -43,32 +44,39 @@ while True:
         z_id, owner_id, pods_p0, pods_p1, visible, platinum = [int(j) for j in input().split()]
 
         if visible == 1:
-            z_vis += [[z_id, owner_id, pods_p0, pods_p1, visible, platinum]]
+            z_vis_1 += [z_id]
+            z_vis_2 += [owner_id]
+            z_vis_3 += [pods_p0]
+            z_vis_4 += [pods_p1]
+            z_vis_5 += [visible]
+            z_vis_6 += [platinum]
 
-        if owner_id == 0:
-            z_pod += [[z_id, owner_id, pods_p0, pods_p1, visible, platinum]]
-            #print(len(l_list))
+        if owner_id == my_id:
+            z_pod_1 += [z_id]
+            z_pod_2 += [owner_id]
+            z_pod_3 += [pods_p0]
+            z_pod_4 += [pods_p1]
+            z_pod_5 += [visible]
+            z_pod_6 += [platinum]
 
             pos_move.append([])
-
-            for i in range(len(l_list)):
-                if l_list[i][0] == z_pod[count][0]:
-                    pos_move[count].append(l_list[i][1])
-                elif l_list[i][1] == z_pod[count][0]:
-                    pos_move[count].append(l_list[i][0])
+            for i in range(len(l_zone_1)):
+                if l_zone_1[i] == z_id:
+                    pos_move[count].append(l_zone_2[i])
+                if l_zone_2[i] == z_id:
+                    pos_move[count].append(l_zone_1[i])
 
             count += 1
-
-        #pos_move = [i for i in z_vis if i not in z_pod]
-
     # Write an action using print
     # To debug: print("Debug messages...", file=sys.stderr)
-    #print(len(pos_move), len(z_pod))
+
 
     # first line for movement commands, second line no longer used (see the protocol in the statement for details)
-    for i in range(len(z_pod)):
-        pod_val = z_pod[i][2] // 2 if z_pod[i][2] // 2 > 0 else 1
-        move += [pod_val, z_pod[i][0], pos_move[i][randint(0, len(pos_move[i]) - 1)]]
+    move = []
+
+    for i in range(len(z_pod_1)):
+        pod_val = z_pod_3[i] // 2 if z_pod_3[i] // 2 > 0 else 1
+        move += [pod_val, z_pod_1[i], pos_move[i][randint(0, len(pos_move[i]) - 1)]]
 
     for i in move:
         print(i, end = " ")
